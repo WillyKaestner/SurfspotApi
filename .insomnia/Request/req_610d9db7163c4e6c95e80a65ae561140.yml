@@ -1,0 +1,21 @@
+_id: req_610d9db7163c4e6c95e80a65ae561140
+type: Request
+parentId: fld_d9ebb7b1cf1249aabb5726cbcd2efead
+modified: 1671189844456
+created: 1670780552568
+url: "{{ _.base_url }}/location/2"
+name: Get surfspot by ID
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1670780346896
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

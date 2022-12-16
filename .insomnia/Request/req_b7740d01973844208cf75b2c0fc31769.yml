@@ -1,0 +1,21 @@
+_id: req_b7740d01973844208cf75b2c0fc31769
+type: Request
+parentId: fld_d9ebb7b1cf1249aabb5726cbcd2efead
+modified: 1671114774833
+created: 1670781075866
+url: "{{ _.base_url }}/location/3"
+name: Delete surf spot by ID
+description: ""
+method: DELETE
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1670780346746
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

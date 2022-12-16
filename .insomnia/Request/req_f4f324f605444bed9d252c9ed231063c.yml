@@ -1,0 +1,32 @@
+_id: req_f4f324f605444bed9d252c9ed231063c
+type: Request
+parentId: fld_d9ebb7b1cf1249aabb5726cbcd2efead
+modified: 1671114770786
+created: 1670782480077
+url: "{{ _.base_url }}/location/2"
+name: Update surf spot
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"name": "alvor",
+    	"kitespot": true,
+    	"surfspot": true,
+    	"best_tide": "low to mid",
+    	"best_wind": "north-west & south-east"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1670780346771
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

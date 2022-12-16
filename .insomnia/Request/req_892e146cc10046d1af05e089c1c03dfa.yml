@@ -1,0 +1,33 @@
+_id: req_892e146cc10046d1af05e089c1c03dfa
+type: Request
+parentId: fld_d9ebb7b1cf1249aabb5726cbcd2efead
+modified: 1671114784184
+created: 1670780671916
+url: "{{ _.base_url }}/location/"
+name: Create new surf spot
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"name": "mos",
+    	"kitespot": true,
+    	"surfspot": true,
+    	"best_tide": "low to mid",
+    	"best_wind": "north-west & south-east"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_965d8ebbf89740de8bbddec7f5b17247
+authentication: {}
+metaSortKey: -1670780346996
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

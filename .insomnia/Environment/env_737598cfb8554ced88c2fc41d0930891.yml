@@ -1,0 +1,14 @@
+_id: env_737598cfb8554ced88c2fc41d0930891
+type: Environment
+parentId: env_6264480dd22957e5817da83b3f0e23f5c2b3f5d8
+modified: 1670939336456
+created: 1670925364012
+name: Deta Deployment
+data:
+  base_url: https://22m7ic.deta.dev/
+dataPropertyOrder:
+  "&":
+    - base_url
+color: null
+isPrivate: false
+metaSortKey: 1670925364012
