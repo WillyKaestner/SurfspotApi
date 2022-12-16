@@ -1,15 +1,9 @@
-import logging
 from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 import pendulum as pdl
 
 from src.db import models, schemas
 
-# from logging.config import dictConfig
-# from .config import LogConfig
-#
-# dictConfig(LogConfig().dict())
-# logger = logging.getLogger(__name__)
 
 class AbstractRepository(ABC):
 
@@ -88,7 +82,6 @@ class DummyData(AbstractRepository):
     """
     DummyData for testing
     """
-
     def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
         """Add a location to the storage"""
         dummy_location = schemas.LocationResponse(id=5, created_at=pdl.now(tz="UTC"), **location.dict())
@@ -111,68 +104,3 @@ class DummyData(AbstractRepository):
 
     def delete(self, location_id: int) -> any:
         """Delete a location in the storage"""
-
-
-# old crud functions
-
-def create_surfspot(db: Session, location: schemas.LocationCreate):
-    db_surfspot = models.DBSurfHopper(created_at=pdl.now(tz="UTC"), **location.dict())
-    db.add(db_surfspot)
-    db.commit()
-    db.refresh(db_surfspot)
-    return db_surfspot
-
-
-def get_surfspot(db: Session, location_id: int):
-    return db.query(models.DBSurfHopper).filter(models.DBSurfHopper.id == location_id).first()
-
-
-def get_all_surfspots(db: Session):
-    return db.query(models.DBSurfHopper).all()
-
-
-def get_surfspot_by_location(db: Session, location: str):
-    """Return a surfspot based on the location"""
-    return db.query(models.DBSurfHopper).filter(models.DBSurfHopper.name == location).first()
-
-
-def update_surfspot(db: Session, location_id: int, updated_location: schemas.LocationBase) -> bool:
-    """
-    Update a surfspots by its ID
-
-    Args:
-        db: Database Session
-        location_id: location ID
-        updated_location: Content of the updated post
-
-    Returns:
-        True if location was updated successfully and false of location ID was not found in the database
-    """
-
-    spot_query = db.query(models.DBSurfHopper).filter(models.DBSurfHopper.id == location_id)
-    spot_query.update(updated_location.dict(), synchronize_session=False)
-    db.commit()
-    # logger.info("Updated location info in database")
-    return spot_query.first()
-
-
-def delete_surfspot_by_id(db: Session, location_id: int) -> bool:
-    """
-    Deletes a surfspot by its id
-
-    Args:
-        db: Database Session
-        location_id: ID in the database of the location
-
-    Returns:
-        True if location was deleted successfully and false of location ID was not found in the database
-    """
-    location_query = db.query(models.DBSurfHopper).filter(models.DBSurfHopper.id == location_id)
-    location = location_query.first()
-
-    if location is None:
-        return False
-    else:
-        location_query.delete(synchronize_session=False)
-        db.commit()
-        return True
