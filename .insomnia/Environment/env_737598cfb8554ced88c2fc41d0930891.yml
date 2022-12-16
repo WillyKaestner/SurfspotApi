@@ -1,7 +1,7 @@
 _id: env_737598cfb8554ced88c2fc41d0930891
 type: Environment
 parentId: env_6264480dd22957e5817da83b3f0e23f5c2b3f5d8
-modified: 1670939336456
+modified: 1671193056905
 created: 1670925364012
 name: Deta Deployment
 data:
@@ -9,6 +9,6 @@ data:
 dataPropertyOrder:
   "&":
     - base_url
-color: null
+color: "#0a8f19"
 isPrivate: false
-metaSortKey: 1670925364012
+metaSortKey: 1
