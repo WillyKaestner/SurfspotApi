@@ -19,15 +19,10 @@ KEYWORD = StorageSource.SQLITE
 
 def get_repository() -> crud.AbstractRepository:
     if KEYWORD == StorageSource.SQLITE:
-        # repository = crud.SqlAlchemyRepository(db=database.get_db_direct())
-        # repository = crud.SqlAlchemyRepository(db=next(database.get_db()),
-        #                                        is_sqlite=True)
-        repository = crud.SqlAlchemyRepository(db=database.get_db(),
-                                               is_sqlite=True)
+        repository = crud.SqlAlchemyRepository(db=database.get_db(), is_sqlite=True)
         return repository
     if KEYWORD == StorageSource.POSTGRES:
-        repository = crud.SqlAlchemyRepository(db=next(database.get_db()),
-                                               is_sqlite=False)
+        repository = crud.SqlAlchemyRepository(db=database.get_db(), is_sqlite=False)
         return repository
     if KEYWORD == StorageSource.DUMMY_DATA:
         repository = crud.DummyData()

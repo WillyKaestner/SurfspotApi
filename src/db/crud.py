@@ -36,11 +36,15 @@ class SqlAlchemyRepository(AbstractRepository):
     """
     SQLAlchemy ORM implementation for handling a database as storage
     """
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, is_sqlite: bool):
         self.db = db
+        self.is_sqlite = is_sqlite
 
     def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
-        db_surfspot = models.DBSurfHopper(created_at=pdl.now(tz="UTC"), **location.dict())
+        if self.is_sqlite:
+            db_surfspot = models.DBSurfHopper(created_at=pdl.now(tz="UTC"), **location.dict())
+        else:
+            db_surfspot = models.DBSurfHopper(**location.dict())
         self.db.add(db_surfspot)
         self.db.commit()
         self.db.refresh(db_surfspot)
@@ -51,7 +55,6 @@ class SqlAlchemyRepository(AbstractRepository):
         return location_query.first()
 
     def get_by_name(self, location_name: str) -> schemas.LocationResponse:
-        print(self.db)
         return self.db.query(models.DBSurfHopper).filter(models.DBSurfHopper.name == location_name).first()
 
     def list(self) -> list[schemas.LocationResponse]:
