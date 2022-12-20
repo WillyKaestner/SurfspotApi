@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 # TODO perhaps rename to db_setup and rename the package to database or orm
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///src/surfhopper.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///src/data/surfhopper.db"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 # DBSession = sessionmaker(autocommit=False, autoflush=False)

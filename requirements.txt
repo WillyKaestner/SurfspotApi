@@ -3,3 +3,4 @@ SQLAlchemy
 pydantic
 pendulum
 uvicorn[standard]
+pyyaml
