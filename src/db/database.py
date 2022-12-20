@@ -19,10 +19,28 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def get_db():
     db = SessionLocal()
     try:
-        yield db
+        print("Database open")
+        # yield db
+        return db
     finally:
+        print("Database closed")
         db.close()
 
+
+class MySuperContextManager:
+    def __init__(self):
+        self.db = SessionLocal()
+
+    def __enter__(self):
+        return self.db
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.db.close()
+
+
+async def get_db_context():
+    with MySuperContextManager() as db:
+        yield db
 
 def get_db_direct():
     db = SessionLocal()

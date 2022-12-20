@@ -1,6 +1,5 @@
 from enum import Enum, auto
 from fastapi import Response, status, HTTPException, Depends, APIRouter
-from sqlalchemy.orm import Session
 
 from src.db import schemas, crud, database
 
@@ -11,30 +10,33 @@ router = APIRouter(
 
 class StorageSource(Enum):
     SQLITE = auto()
+    POSTGRES = auto()
     DUMMY_DATA = auto()
 
 
 # Define Database type tp be used for location
 KEYWORD = StorageSource.SQLITE
 
-def get_repository(db: Session = Depends(database.get_db)):
+def get_repository() -> crud.AbstractRepository:
     if KEYWORD == StorageSource.SQLITE:
-        # repository = crud.SqlAlchemyRepository(db=db)
-        repository = crud.SqlAlchemyRepository(db=database.get_db_direct())
-        # repository = get_sql_alchemy_repository()
+        # repository = crud.SqlAlchemyRepository(db=database.get_db_direct())
+        # repository = crud.SqlAlchemyRepository(db=next(database.get_db()),
+        #                                        is_sqlite=True)
+        repository = crud.SqlAlchemyRepository(db=database.get_db(),
+                                               is_sqlite=True)
+        return repository
+    if KEYWORD == StorageSource.POSTGRES:
+        repository = crud.SqlAlchemyRepository(db=next(database.get_db()),
+                                               is_sqlite=False)
         return repository
     if KEYWORD == StorageSource.DUMMY_DATA:
         repository = crud.DummyData()
         return repository
 
-# def get_sql_alchemy_repository(db: Session = Depends(database.get_db)):
-#     return crud.SqlAlchemyRepository(db=db)
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.LocationResponse)
 def create_spot(location: schemas.LocationCreate, storage: crud.AbstractRepository = Depends(get_repository)):
-    # db: Session = Depends(database.get_db) # parameter that was removed
     location_in_storage = storage.get_by_name(location.name)
-    # db_spot = crud.get_surfspot_by_location(db, location=location.name)
     if location_in_storage:
         raise HTTPException(status_code=400, detail="Location already registered")
     return storage.add(location=location)
