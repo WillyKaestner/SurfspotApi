@@ -2,6 +2,10 @@ from enum import Enum, auto
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from src.database import crud
+from src.config import settings
+
+class InvalidStorageType(Exception):
+    """Raised when the .env file provided an invalid database type"""
 
 
 class StorageSource(Enum):
@@ -10,12 +14,37 @@ class StorageSource(Enum):
     DUMMY_DATA = auto()
 
 
-# Define Database type tp be used for location
-KEYWORD = StorageSource.SQLITE
+def read_storage_type(option: str) -> StorageSource:
+    """
+    Returns the correct enum object based on the storage type string
 
-# Define the Database
-SQLALCHEMY_DATABASE_URL = "sqlite:///src/data/surfhopper.db"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+    Args:
+        option: possible storage types (SQLITE, POSTGRES, DUMMY_DATA)
+
+    Returns:
+        StorageSource instance based provided option
+    """
+    storage_types = {
+        "SQLITE": StorageSource.SQLITE,
+        "POSTGRES": StorageSource.POSTGRES,
+        "DUMMY_DATA": StorageSource.DUMMY_DATA
+    }
+
+    try:
+        storage = storage_types[option]
+    except KeyError:
+        raise InvalidStorageType(f"Invalid DATABASE_TYPE({option}) provided by .env file")
+    else:
+        return storage
+
+
+# Read storage type and define database
+STORAGE = read_storage_type(settings.database_type)
+if STORAGE == StorageSource.SQLITE:
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{settings.database_name}"
+if STORAGE == StorageSource.POSTGRES:
+    SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@" \
+                              f"{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
 
 # DBSession = sessionmaker(autocommit=False, autoflush=False)
 #
@@ -41,7 +70,7 @@ def get_db() -> Session:
         db.close()
 
 
-def get_repository() -> crud.AbstractRepository:
+def get_repository(storage: StorageSource = STORAGE) -> crud.AbstractRepository:
     """
     Factory function that creates the repository instance based on the selected storage.
 
@@ -52,12 +81,12 @@ def get_repository() -> crud.AbstractRepository:
     Returns:
         Repository instance based on the selected storage type
     """
-    if KEYWORD == StorageSource.SQLITE:
+    if storage == StorageSource.SQLITE:
         repository = crud.SqlAlchemyRepository(db=get_db(), is_sqlite=True)
         return repository
-    if KEYWORD == StorageSource.POSTGRES:
+    if storage == StorageSource.POSTGRES:
         repository = crud.SqlAlchemyRepository(db=get_db(), is_sqlite=False)
         return repository
-    if KEYWORD == StorageSource.DUMMY_DATA:
+    if storage == StorageSource.DUMMY_DATA:
         repository = crud.DummyData()
         return repository

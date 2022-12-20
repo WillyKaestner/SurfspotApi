@@ -98,12 +98,24 @@ class DummyData(AbstractRepository):
 
     def get_by_name(self, location_name: str) -> schemas.LocationResponse:
         """Get a location from the storage by its name"""
+        dummy_location = schemas.LocationResponse(id=5, name="dummy_location", kitespot=True, surfspot=False,
+                                                  created_at=pdl.now(tz="UTC"))
+        return dummy_location
 
     def list(self) -> list[schemas.LocationResponse]:
         """List all locations"""
+        dummy_location_a = schemas.LocationResponse(id=5, name="dummy_location", kitespot=True, surfspot=False,
+                                                    created_at=pdl.now(tz="UTC"))
+        dummy_location_b = schemas.LocationResponse(id=6, name="another_location", kitespot=True, surfspot=True,
+                                                    created_at=pdl.now(tz="UTC"))
+        return [dummy_location_a, dummy_location_b]
 
     def update(self, location_id: int, updated_location: schemas.LocationBase) -> schemas.LocationResponse:
         """Update a location in the storage"""
+        dummy_location = schemas.LocationResponse(id=5, name="updated_dummy_location", kitespot=True, surfspot=False,
+                                                  created_at=pdl.now(tz="UTC"))
+        return dummy_location
 
-    def delete(self, location_id: int) -> any:
+    def delete(self, location_id: int) -> bool:
         """Delete a location in the storage"""
+        return True
