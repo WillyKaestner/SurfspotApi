@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from fastapi import FastAPI, Response
 import functools
 import io
@@ -14,12 +17,12 @@ from .api_routers import location
 # TODO: implement authorization
 # TODO: add testing
 # TODO: add alembic
-# TODO: create git and github repo
 # TODO: create a simple readme file
 # TODO: create a config file that reads in specific deployment values (which kind of database to use etc.)
 
 # DONE TODO's
 # TODO: add api_routers to clean up this main file -> create location.py and move everything connected there
+# TODO: create git and github repo
 
 # create the tables in the database, based on the sqlalchemy models
 Base.metadata.create_all(bind=engine)
@@ -46,3 +49,10 @@ def read_openapi_yaml() -> Response:
     yaml_s = io.StringIO()
     yaml.dump(openapi_json, yaml_s)
     return Response(yaml_s.getvalue(), media_type='text/yaml')
+
+
+# save open api documentation as json file
+file_path = Path(__file__).parent / 'data' / 'openapi_doc.json'
+openapi_doc = app.openapi()
+with open(file_path, "w") as outfile:
+    json.dump(openapi_doc, outfile)
