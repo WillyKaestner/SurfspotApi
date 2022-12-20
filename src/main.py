@@ -6,8 +6,8 @@ import functools
 import io
 import yaml
 
-from .db.database import engine
-from .db.models import Base
+from .database.db_setup import engine
+from .database.models import Base
 from .api_routers import location
 
 # TODO: create option here to work with SQLite or Postgres Database (perhaps even just a list etc.)

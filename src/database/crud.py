@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 import pendulum as pdl
 
-from src.db import models, schemas
+from src.database import models, schemas
 
 
 class AbstractRepository(ABC):
