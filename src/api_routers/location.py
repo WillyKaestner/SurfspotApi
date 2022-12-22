@@ -1,5 +1,6 @@
 from fastapi import Response, status, HTTPException, Depends, APIRouter
-from src.database import schemas, db_setup
+from src.database import db_setup
+import src.schemas as schemas
 from src.crud import crud_location
 
 router = APIRouter(

@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 import pendulum as pdl
 
-from src.database import schemas
-from src.models import location
+import src.schemas as schemas
+import src.models as models
 
 
 class AbstractLocation(ABC):
@@ -43,9 +43,9 @@ class SqlAlchemyLocation(AbstractLocation):
 
     def add(self, location_data: schemas.LocationCreate) -> schemas.LocationResponse:
         if self.is_sqlite:
-            db_surfspot = location.MODEL(created_at=pdl.now(tz="UTC"), **location_data.dict())
+            db_surfspot = models.location.MODEL(created_at=pdl.now(tz="UTC"), **location_data.dict())
         else:
-            db_surfspot = location.MODEL(**location_data.dict())
+            db_surfspot = models.location.MODEL(**location_data.dict())
         self.db.add(db_surfspot)
         self.db.commit()
         self.db.refresh(db_surfspot)
@@ -56,10 +56,10 @@ class SqlAlchemyLocation(AbstractLocation):
         return location_query.first()
 
     def get_by_name(self, location_name: str) -> schemas.LocationResponse:
-        return self.db.query(location.MODEL).filter(location.MODEL.name == location_name).first()
+        return self.db.query(models.location.MODEL).filter(models.location.MODEL.name == location_name).first()
 
     def list(self) -> list[schemas.LocationResponse]:
-        return self.db.query(location.MODEL).all()
+        return self.db.query(models.location.MODEL).all()
 
     def update(self, location_id: int, updated_location: schemas.LocationBase) -> schemas.LocationResponse:
         spot_query = self._get_location_by_id_query(location_id)
@@ -79,7 +79,7 @@ class SqlAlchemyLocation(AbstractLocation):
             return True
 
     def _get_location_by_id_query(self, location_id: int) -> any:
-        return self.db.query(location.MODEL).filter(location.MODEL.id == location_id)
+        return self.db.query(models.location.MODEL).filter(models.location.MODEL.id == location_id)
 
 
 class DummyLocation(AbstractLocation):
