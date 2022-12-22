@@ -1,13 +1,10 @@
-import json
-from pathlib import Path
-
 from fastapi import FastAPI, Response
 import functools
 import io
 import yaml
 
 from .database.db_setup import engine
-from .database.models import Base
+from src.models.location import Base
 from .api_routers import location
 
 # TODO: implement authorization

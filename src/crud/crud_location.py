@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 import pendulum as pdl
 
 from src.database import schemas
-from src.models import models
+from src.models import location
 
 
 class AbstractLocation(ABC):
 
     @abstractmethod
-    def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
+    def add(self, location_data: schemas.LocationCreate) -> schemas.LocationResponse:
         """Add a location to the storage"""
 
     @abstractmethod
@@ -41,11 +41,11 @@ class SqlAlchemyLocation(AbstractLocation):
         self.db = db
         self.is_sqlite = is_sqlite
 
-    def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
+    def add(self, location_data: schemas.LocationCreate) -> schemas.LocationResponse:
         if self.is_sqlite:
-            db_surfspot = models.MODEL(created_at=pdl.now(tz="UTC"), **location.dict())
+            db_surfspot = location.MODEL(created_at=pdl.now(tz="UTC"), **location_data.dict())
         else:
-            db_surfspot = models.MODEL(**location.dict())
+            db_surfspot = location.MODEL(**location_data.dict())
         self.db.add(db_surfspot)
         self.db.commit()
         self.db.refresh(db_surfspot)
@@ -56,10 +56,10 @@ class SqlAlchemyLocation(AbstractLocation):
         return location_query.first()
 
     def get_by_name(self, location_name: str) -> schemas.LocationResponse:
-        return self.db.query(models.MODEL).filter(models.MODEL.name == location_name).first()
+        return self.db.query(location.MODEL).filter(location.MODEL.name == location_name).first()
 
     def list(self) -> list[schemas.LocationResponse]:
-        return self.db.query(models.MODEL).all()
+        return self.db.query(location.MODEL).all()
 
     def update(self, location_id: int, updated_location: schemas.LocationBase) -> schemas.LocationResponse:
         spot_query = self._get_location_by_id_query(location_id)
@@ -69,9 +69,9 @@ class SqlAlchemyLocation(AbstractLocation):
 
     def delete(self, location_id: int) -> bool:
         location_query = self._get_location_by_id_query(location_id)
-        location = location_query.first()
+        location_data = location_query.first()
 
-        if location is None:
+        if location_data is None:
             return False
         else:
             location_query.delete(synchronize_session=False)
@@ -79,16 +79,16 @@ class SqlAlchemyLocation(AbstractLocation):
             return True
 
     def _get_location_by_id_query(self, location_id: int) -> any:
-        return self.db.query(models.MODEL).filter(models.MODEL.id == location_id)
+        return self.db.query(location.MODEL).filter(location.MODEL.id == location_id)
 
 
 class DummyLocation(AbstractLocation):
     """
     Dummy location data for testing
     """
-    def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
+    def add(self, location_data: schemas.LocationCreate) -> schemas.LocationResponse:
         """Add a location to the storage"""
-        dummy_location = schemas.LocationResponse(id=5, created_at=pdl.now(tz="UTC"), **location.dict())
+        dummy_location = schemas.LocationResponse(id=5, created_at=pdl.now(tz="UTC"), **location_data.dict())
         return dummy_location
 
     def get_by_id(self, location_id: int) -> schemas.LocationResponse:
