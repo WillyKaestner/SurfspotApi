@@ -42,9 +42,9 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
         if self.is_sqlite:
-            db_surfspot = models.DBSurfHopper(created_at=pdl.now(tz="UTC"), **location.dict())
+            db_surfspot = models.MODEL(created_at=pdl.now(tz="UTC"), **location.dict())
         else:
-            db_surfspot = models.DBSurfHopper(**location.dict())
+            db_surfspot = models.MODEL(**location.dict())
         self.db.add(db_surfspot)
         self.db.commit()
         self.db.refresh(db_surfspot)
@@ -55,10 +55,10 @@ class SqlAlchemyRepository(AbstractRepository):
         return location_query.first()
 
     def get_by_name(self, location_name: str) -> schemas.LocationResponse:
-        return self.db.query(models.DBSurfHopper).filter(models.DBSurfHopper.name == location_name).first()
+        return self.db.query(models.MODEL).filter(models.MODEL.name == location_name).first()
 
     def list(self) -> list[schemas.LocationResponse]:
-        return self.db.query(models.DBSurfHopper).all()
+        return self.db.query(models.MODEL).all()
 
     def update(self, location_id: int, updated_location: schemas.LocationBase) -> schemas.LocationResponse:
         spot_query = self._get_location_by_id_query(location_id)
@@ -78,7 +78,7 @@ class SqlAlchemyRepository(AbstractRepository):
             return True
 
     def _get_location_by_id_query(self, location_id: int) -> any:
-        return self.db.query(models.DBSurfHopper).filter(models.DBSurfHopper.id == location_id)
+        return self.db.query(models.MODEL).filter(models.MODEL.id == location_id)
 
 
 class DummyData(AbstractRepository):

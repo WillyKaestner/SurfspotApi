@@ -42,9 +42,12 @@ def read_storage_type(option: str) -> StorageSource:
 STORAGE = read_storage_type(settings.database_type)
 if STORAGE == StorageSource.SQLITE:
     SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{settings.database_name}"
+    engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 if STORAGE == StorageSource.POSTGRES:
-    SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@" \
-                              f"{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
+    SQLALCHEMY_DATABASE_URL = f"postgresql://willykastner:{settings.database_password}@" \
+                              f"localhost:5432/{settings.database_name}"
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
 
 # DBSession = sessionmaker(autocommit=False, autoflush=False)
 #
@@ -53,12 +56,16 @@ if STORAGE == StorageSource.POSTGRES:
 #     Base.metadata.bind = engine
 #     DBSession.bind = engine
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db() -> Session:
     """
     Creates a database session and returns it, while still closing the database session if an error occurs.
+
+    We put the creation of the SessionLocal() and handling of the requests in a try block. And then we close it in the
+    "finally" block. This way we make sure the database session is always closed after the request. Even if there was
+    an exception while processing the request.
 
     Returns:
         SQLAlchemy Database session
