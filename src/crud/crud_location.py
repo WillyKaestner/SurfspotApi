@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 import pendulum as pdl
 
-from src.database import models, schemas
+from src.database import schemas
+from src.models import models
 
 
-class AbstractRepository(ABC):
+class AbstractLocation(ABC):
 
     @abstractmethod
     def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
@@ -32,7 +33,7 @@ class AbstractRepository(ABC):
         """Delete a location in the storage"""
 
 
-class SqlAlchemyRepository(AbstractRepository):
+class SqlAlchemyLocation(AbstractLocation):
     """
     SQLAlchemy ORM implementation for handling a database as storage
     """
@@ -81,9 +82,9 @@ class SqlAlchemyRepository(AbstractRepository):
         return self.db.query(models.MODEL).filter(models.MODEL.id == location_id)
 
 
-class DummyData(AbstractRepository):
+class DummyLocation(AbstractLocation):
     """
-    DummyData for testing
+    Dummy location data for testing
     """
     def add(self, location: schemas.LocationCreate) -> schemas.LocationResponse:
         """Add a location to the storage"""

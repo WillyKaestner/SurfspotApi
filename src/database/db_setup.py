@@ -1,7 +1,7 @@
 from enum import Enum, auto
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from src.database import crud
+from src.crud import crud_location
 from src.config import settings
 
 class InvalidStorageType(Exception):
@@ -77,7 +77,7 @@ def get_db() -> Session:
         db.close()
 
 
-def get_repository(storage: StorageSource = STORAGE) -> crud.AbstractRepository:
+def get_repository(storage: StorageSource = STORAGE) -> crud_location.AbstractLocation:
     """
     Factory function that creates the repository instance based on the selected storage.
 
@@ -89,11 +89,11 @@ def get_repository(storage: StorageSource = STORAGE) -> crud.AbstractRepository:
         Repository instance based on the selected storage type
     """
     if storage == StorageSource.SQLITE:
-        repository = crud.SqlAlchemyRepository(db=get_db(), is_sqlite=True)
+        repository = crud_location.SqlAlchemyLocation(db=get_db(), is_sqlite=True)
         return repository
     if storage == StorageSource.POSTGRES:
-        repository = crud.SqlAlchemyRepository(db=get_db(), is_sqlite=False)
+        repository = crud_location.SqlAlchemyLocation(db=get_db(), is_sqlite=False)
         return repository
     if storage == StorageSource.DUMMY_DATA:
-        repository = crud.DummyData()
+        repository = crud_location.DummyLocation()
         return repository
