@@ -3,9 +3,9 @@ import functools
 import io
 import yaml
 
+from src.api.api_v1.api import api_router
 from .database.db_setup import engine
 from src.models.location import Base
-from .api_routers import location
 
 # TODO: implement authorization
 # TODO: add testing
@@ -24,9 +24,9 @@ from .api_routers import location
 # create the tables in the database, based on the sqlalchemy models
 Base.metadata.create_all(bind=engine)
 
-# Create FastAPI app and include routers
+# # Create FastAPI app and include routers
 app = FastAPI()
-app.include_router(location.router)
+app.include_router(api_router)
 
 
 # @app.on_event("startup")
