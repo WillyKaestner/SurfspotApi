@@ -2,7 +2,7 @@ from enum import Enum, auto
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from src.crud import crud_location
-from src.config import settings
+from src.config import SETTINGS
 
 class InvalidStorageType(Exception):
     """Raised when the .env file provided an invalid database type"""
@@ -22,7 +22,7 @@ def read_storage_type(option: str) -> StorageSource:
         option: possible storage types (SQLITE, POSTGRES, DUMMY_DATA)
 
     Returns:
-        StorageSource instance based provided option
+        StorageType instance based provided option
     """
     storage_types = {
         "SQLITE": StorageSource.SQLITE,
@@ -39,13 +39,13 @@ def read_storage_type(option: str) -> StorageSource:
 
 
 # Read storage type and define database
-STORAGE = read_storage_type(settings.database_type)
+STORAGE = read_storage_type(SETTINGS.database_type)
 if STORAGE == StorageSource.SQLITE:
-    SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{settings.database_name}"
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{SETTINGS.database_name}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 if STORAGE == StorageSource.POSTGRES:
-    SQLALCHEMY_DATABASE_URL = f"postgresql://willykastner:{settings.database_password}@" \
-                              f"localhost:5432/{settings.database_name}"
+    SQLALCHEMY_DATABASE_URL = f"postgresql://willykastner:{SETTINGS.database_password}@" \
+                              f"localhost:5432/{SETTINGS.database_name}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 

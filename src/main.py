@@ -4,14 +4,15 @@ import io
 import yaml
 
 from src.api.api_v1.api import api_router
-from .database.db_setup import engine
+from .database.session import engine
 from src.models.location import Base
 
 # TODO: implement authorization
 # TODO: add testing
 # TODO: add alembic
 # TODO: create a simple readme file
-# TODO: try out with postgres database
+# TODO: Find a better solution for creating a database engine & SessionLocal instance so it is skipped when working
+#  with Dummy_Data
 
 # DONE TODO's
 # TODO: add api_routers to clean up this main file -> create location.py and move everything connected there
@@ -20,8 +21,12 @@ from src.models.location import Base
 # TODO: create option here to work with SQLite or Postgres Database (perhaps even just a list etc.)
 #  This can probably be done in a way that the location api endpoints (get, post etc) don't rely on a concrete
 #  implementation but rather an interface to preform their crud actions
+# TODO: try out with postgres database
+# TODO: use enums for handling the database types
+# TODO: add validation to the pydantic model when reading in the database type
 
 # create the tables in the database, based on the sqlalchemy models
+# TODO: fix this for a datbase that wasn't created yet
 Base.metadata.create_all(bind=engine)
 
 # # Create FastAPI app and include routers

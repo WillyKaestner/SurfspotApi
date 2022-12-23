@@ -1,7 +1,6 @@
 from fastapi import Response, status, HTTPException, Depends, APIRouter
-from src.database import db_setup
 import src.schemas as schemas
-from src.crud import crud_location
+from src.crud import crud_location, repository
 
 router = APIRouter(
     prefix="/location",
@@ -11,7 +10,7 @@ router = APIRouter(
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.LocationResponse)
 def create_spot(location: schemas.LocationCreate,
-                storage: crud_location.AbstractLocation = Depends(db_setup.get_repository)):
+                storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location_in_storage = storage.get_by_name(location.name)
     if location_in_storage:
         raise HTTPException(status_code=400, detail="Location already registered")
@@ -19,13 +18,13 @@ def create_spot(location: schemas.LocationCreate,
 
 
 @router.get("/", response_model=list[schemas.LocationResponse])
-def read_all_surfspots(storage: crud_location.AbstractLocation = Depends(db_setup.get_repository)):
+def read_all_surfspots(storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     locations = storage.list()
     return locations
 
 
 @router.get("/{location_id}", response_model=schemas.LocationResponse)
-def read_surfspot(location_id: int, storage: crud_location.AbstractLocation = Depends(db_setup.get_repository)):
+def read_surfspot(location_id: int, storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location = storage.get_by_id(location_id)
     if location is None:
         raise HTTPException(status_code=404, detail="Location not found")
@@ -35,7 +34,7 @@ def read_surfspot(location_id: int, storage: crud_location.AbstractLocation = De
 @router.put("/{location_id}", status_code=status.HTTP_201_CREATED, response_model=schemas.LocationResponse)
 def update_spot(location_id: int,
                 updated_location: schemas.LocationBase,
-                storage: crud_location.AbstractLocation = Depends(db_setup.get_repository)):
+                storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location = storage.get_by_id(location_id)
     if location is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -46,7 +45,7 @@ def update_spot(location_id: int,
 
 
 @router.delete("/{location_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(location_id: int, storage: crud_location.AbstractLocation = Depends(db_setup.get_repository)):
+def delete_post(location_id: int, storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     delete_status = storage.delete(location_id)
     if delete_status is False:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

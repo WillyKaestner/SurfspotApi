@@ -2,6 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql.expression import text
+from src.config import SETTINGS, StorageType
 
 Base = declarative_base()
 
@@ -30,11 +31,7 @@ class PostgresLocation(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 
-# STORAGE = db_setup.STORAGE
-# if STORAGE == db_setup_a.StorageSource.SQLITE:
-#     MODEL = SQLiteLocation
-# if STORAGE == db_setup_a.StorageSource.POSTGRES:
-#     MODEL = PostgresLocation
-
-MODEL = PostgresLocation
-
+if SETTINGS.database_type == StorageType.SQLITE:
+    MODEL = SQLiteLocation
+if SETTINGS.database_type == StorageType.POSTGRES:
+    MODEL = PostgresLocation
