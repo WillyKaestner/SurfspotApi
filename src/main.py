@@ -3,16 +3,15 @@ import functools
 import io
 import yaml
 
+import src.database as db
 from src.api.api_v1.api import api_router
-from .database.session import engine
-from src.models.location import Base
 
-# TODO: implement authorization
-# TODO: add testing
 # TODO: add alembic
-# TODO: create a simple readme file
 # TODO: Find a better solution for creating a database engine & SessionLocal instance so it is skipped when working
 #  with Dummy_Data
+# TODO: implement authorization
+# TODO: add testing
+# TODO: create a simple readme file
 
 # DONE TODO's
 # TODO: add api_routers to clean up this main file -> create location.py and move everything connected there
@@ -25,18 +24,17 @@ from src.models.location import Base
 # TODO: use enums for handling the database types
 # TODO: add validation to the pydantic model when reading in the database type
 
-# create the tables in the database, based on the sqlalchemy models
-# TODO: fix this for a datbase that wasn't created yet
-Base.metadata.create_all(bind=engine)
-
-# # Create FastAPI app and include routers
-app = FastAPI()
-app.include_router(api_router)
-
+# Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
+db.init_db()
 
 # @app.on_event("startup")
 # async def start_up_event():
 #     db.init_db(db.DB_FILE)
+
+
+# Create FastAPI app and include routers
+app = FastAPI()
+app.include_router(api_router)
 
 @app.get("/")
 async def root():
