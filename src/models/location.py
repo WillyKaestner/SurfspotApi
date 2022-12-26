@@ -30,4 +30,8 @@ if SETTINGS.database_type == StorageType.POSTGRES:
         wave_info = Column(String)
         created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
+else:
+    class Location:
+        pass
+
 MODEL = Location

@@ -2,13 +2,11 @@ from fastapi import FastAPI, Response
 import functools
 import io
 import yaml
-
 import src.database as db
 from src.api.api_v1.api import api_router
+from src.config import SETTINGS, StorageType
 
 # TODO: add alembic
-# TODO: Find a better solution for creating a database engine & SessionLocal instance so it is skipped when working
-#  with Dummy_Data
 # TODO: implement authorization
 # TODO: add testing
 # TODO: create a simple readme file
@@ -23,9 +21,12 @@ from src.api.api_v1.api import api_router
 # TODO: try out with postgres database
 # TODO: use enums for handling the database types
 # TODO: add validation to the pydantic model when reading in the database type
+# TODO: Find a better solution for creating a database engine & SessionLocal instance so it is skipped when working
+#  with Dummy_Data
 
 # Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
-db.init_db()
+if SETTINGS.database_type != StorageType.DUMMY_DATA:
+    db.init_db()
 
 # @app.on_event("startup")
 # async def start_up_event():
