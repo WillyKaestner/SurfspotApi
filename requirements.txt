@@ -1,5 +1,6 @@
 fastapi[all]
 SQLAlchemy
+alembic
 pydantic
 pendulum
 uvicorn[standard]
