@@ -5,14 +5,15 @@ from src.config import SETTINGS, StorageType
 
 # Create Base Session (SessionLocal) based on the Storage selected
 if SETTINGS.database_type == StorageType.SQLITE:
-    SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{SETTINGS.database_name}"
+    SQLALCHEMY_DATABASE_URL = f"sqlite:///./src/data/{SETTINGS.database_name}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-if SETTINGS.database_type == StorageType.POSTGRES:
+elif SETTINGS.database_type == StorageType.POSTGRES:
     SQLALCHEMY_DATABASE_URL = f"postgresql://willykastner:{SETTINGS.database_password}@" \
                               f"localhost:5432/{SETTINGS.database_name}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 else:
     SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{SETTINGS.database_name}"
     engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})

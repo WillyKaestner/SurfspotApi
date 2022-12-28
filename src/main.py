@@ -25,7 +25,7 @@ from src.config import SETTINGS, StorageType
 #  with Dummy_Data
 
 # Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
-if SETTINGS.database_type != StorageType.DUMMY_DATA:
+if SETTINGS.database_type == StorageType.SQLITE:
     db.init_db()
 
 # @app.on_event("startup")

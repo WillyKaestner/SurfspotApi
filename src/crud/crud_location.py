@@ -42,10 +42,7 @@ class SqlAlchemyLocation(AbstractLocation):
         self.is_sqlite = is_sqlite
 
     def add(self, location_data: schemas.LocationCreate) -> schemas.LocationResponse:
-        if self.is_sqlite:
-            db_surfspot = models.location.MODEL(created_at=pdl.now(tz="UTC"), **location_data.dict())
-        else:
-            db_surfspot = models.location.MODEL(**location_data.dict())
+        db_surfspot = self._create_data_model(location_data)
         self.db.add(db_surfspot)
         self.db.commit()
         self.db.refresh(db_surfspot)
@@ -56,10 +53,10 @@ class SqlAlchemyLocation(AbstractLocation):
         return location_query.first()
 
     def get_by_name(self, location_name: str) -> schemas.LocationResponse:
-        return self.db.query(models.location.MODEL).filter(models.location.MODEL.name == location_name).first()
+        return self.db.query(models.Location).filter(models.Location.name == location_name).first()
 
     def list(self) -> list[schemas.LocationResponse]:
-        return self.db.query(models.location.MODEL).all()
+        return self.db.query(models.Location).all()
 
     def update(self, location_id: int, updated_location: schemas.LocationBase) -> schemas.LocationResponse:
         spot_query = self._get_location_by_id_query(location_id)
@@ -78,8 +75,16 @@ class SqlAlchemyLocation(AbstractLocation):
             self.db.commit()
             return True
 
+    def _create_data_model(self, location_data: schemas.LocationCreate) -> models.Location:
+        """Create the data model instance populated with the location details to be added to the database"""
+        if self.is_sqlite:
+            db_surfspot = models.Location(created_at=pdl.now(tz="UTC"), **location_data.dict())
+        else:
+            db_surfspot = models.Location(**location_data.dict())
+        return db_surfspot
+
     def _get_location_by_id_query(self, location_id: int) -> any:
-        return self.db.query(models.location.MODEL).filter(models.location.MODEL.id == location_id)
+        return self.db.query(models.Location).filter(models.Location.id == location_id)
 
 
 class DummyLocation(AbstractLocation):
