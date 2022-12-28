@@ -6,10 +6,8 @@ import src.database as db
 from src.api.api_v1.api import api_router
 from src.config import SETTINGS, StorageType
 
-# TODO: add alembic
 # TODO: implement authorization
 # TODO: add testing
-# TODO: create a simple readme file
 
 # DONE TODO's
 # TODO: add api_routers to clean up this main file -> create location.py and move everything connected there
@@ -23,6 +21,8 @@ from src.config import SETTINGS, StorageType
 # TODO: add validation to the pydantic model when reading in the database type
 # TODO: Find a better solution for creating a database engine & SessionLocal instance so it is skipped when working
 #  with Dummy_Data
+# TODO: create a simple readme file
+# TODO: add alembic
 
 # Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
 if SETTINGS.database_type == StorageType.SQLITE:
