@@ -13,11 +13,11 @@ class AbstractLocation(ABC):
         """Add a location to the storage"""
 
     @abstractmethod
-    def get_by_id(self, location_id: int) -> schemas.LocationResponse:
+    def get_by_id(self, location_id: int) -> schemas.LocationResponse | None:
         """Get a location from the storage by its ID"""
 
     @abstractmethod
-    def get_by_name(self, location_name: str) -> schemas.LocationResponse:
+    def get_by_name(self, location_name: str) -> schemas.LocationResponse | None:
         """Get a location from the storage by its name"""
 
     @abstractmethod
@@ -48,11 +48,11 @@ class SqlAlchemyLocation(AbstractLocation):
         self.db.refresh(db_surfspot)
         return db_surfspot
 
-    def get_by_id(self, location_id: int) -> schemas.LocationResponse:
+    def get_by_id(self, location_id: int) -> schemas.LocationResponse | None:
         location_query = self._get_location_by_id_query(location_id)
         return location_query.first()
 
-    def get_by_name(self, location_name: str) -> schemas.LocationResponse:
+    def get_by_name(self, location_name: str) -> schemas.LocationResponse | None:
         return self.db.query(models.Location).filter(models.Location.name == location_name).first()
 
     def list(self) -> list[schemas.LocationResponse]:
@@ -125,3 +125,80 @@ class DummyLocation(AbstractLocation):
     def delete(self, location_id: int) -> bool:
         """Delete a location in the storage"""
         return True
+
+
+class FakeDB(AbstractLocation):
+    """
+    Dummy location data for testing
+    """
+    fake_db = [
+        {
+            "id": 1,
+            "name": "Mos",
+            "kitespot": True,
+            "surfspot": True,
+            "best_tide": "low to mid",
+            "best_wind": "north-west to south",
+            "created_at": pdl.now(tz="UTC")
+        },
+        {
+            "id": 2,
+            "name": "Alvor",
+            "kitespot": True,
+            "surfspot": False,
+            "best_tide": "all tides",
+            "best_wind": "north-west and south-east",
+            "created_at": pdl.now(tz="UTC")
+        },
+        {
+            "id": 3,
+            "name": "Ingrina",
+            "kitespot": False,
+            "surfspot": True,
+            "best_tide": "low to mid",
+            "best_wind": "north",
+            "created_at": pdl.now(tz="UTC")
+        },
+    ]
+
+    def add(self, location_data: schemas.LocationCreate) -> schemas.LocationResponse:
+        new_id = FakeDB.fake_db[-1]["id"] + 1
+        location_data = schemas.LocationResponse(id=new_id, **location_data.dict(), created_at=pdl.now(tz="UTC"))
+        FakeDB.fake_db.append(location_data.dict())
+        return location_data
+
+    def get_by_id(self, location_id: int) -> schemas.LocationResponse | None:
+        for item in FakeDB.fake_db:
+            if location_id == item["id"]:
+                return schemas.LocationResponse(**item)
+
+        return None
+
+    def get_by_name(self, location_name: str) -> schemas.LocationResponse | None:
+        for item in FakeDB.fake_db:
+            if location_name == item["name"]:
+                return schemas.LocationResponse(**item)
+
+        return None
+
+    def list(self) -> list[schemas.LocationResponse]:
+        response_list = []
+        for item in FakeDB.fake_db:
+            response_list.append(schemas.LocationResponse(**item))
+        return response_list
+
+    def update(self, location_id: int, updated_location: schemas.LocationBase) -> schemas.LocationResponse:
+        for index, item in enumerate(FakeDB.fake_db):
+            if location_id == item["id"]:
+                location_data = schemas.LocationResponse(id=location_id,
+                                                         **updated_location.dict(),
+                                                         created_at=pdl.now(tz="UTC"))
+                FakeDB.fake_db[index] = location_data.dict()
+                return location_data
+
+    def delete(self, location_id: int) -> bool:
+        for index, item in enumerate(FakeDB.fake_db):
+            if location_id == item["id"]:
+                FakeDB.fake_db.pop(index)
+                return True
+        return False

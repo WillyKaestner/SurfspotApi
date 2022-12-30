@@ -22,3 +22,6 @@ def get_crud_location() -> crud_location.AbstractLocation:
     if SETTINGS.database_type == StorageType.DUMMY_DATA:
         repository = crud_location.DummyLocation()
         return repository
+    if SETTINGS.database_type == StorageType.FAKE_DB:
+        repository = crud_location.FakeDB()
+        return repository

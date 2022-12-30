@@ -14,7 +14,8 @@ class Settings(BaseSettings):
     def name_must_contain_space(cls, value: str):
         storage_mapping = {"SQLITE": StorageType.SQLITE,
                            "POSTGRES": StorageType.POSTGRES,
-                           "DUMMY_DATA": StorageType.DUMMY_DATA}
+                           "DUMMY_DATA": StorageType.DUMMY_DATA,
+                           "FAKE_DB": StorageType.FAKE_DB}
         if value.upper() not in storage_mapping.keys():
             raise ValueError(f'Incorrect database type provided: {value}. '
                              f'Use one of the following: {list(storage_mapping.keys())}')
@@ -25,6 +26,7 @@ class StorageType(Enum):
     SQLITE = auto()
     POSTGRES = auto()
     DUMMY_DATA = auto()
+    FAKE_DB = auto()
 
 
 SETTINGS = Settings()
