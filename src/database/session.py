@@ -15,12 +15,11 @@ elif SETTINGS.database_type == StorageType.POSTGRES:
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 else:
-    SQLALCHEMY_DATABASE_URL = f"sqlite:///src/data/{SETTINGS.database_name}"
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    # Only needed for Dummy_Data so that no errors are raised when importing engine in init_db.py
+    engine = None
 
-#TODO: Errorhandling if engine couldn't be created
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+#TODO: Errorhandling if engine couldn't be created for some reason?
 
 
 def get_db() -> Session:
