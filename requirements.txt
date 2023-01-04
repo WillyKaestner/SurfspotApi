@@ -6,3 +6,4 @@ pendulum
 uvicorn[standard]
 pyyaml
 psycopg2-binary
+pytest
