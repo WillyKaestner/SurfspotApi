@@ -8,6 +8,9 @@ from src.config import SETTINGS, StorageType
 
 # TODO: implement authorization
 # TODO: add testing
+# TODO: add Github actions to deploy container aws lightsail
+# TODO: add a postgres database or S3 databucket storing the sqlite database in aws
+# TODO: add CORS
 
 # DONE TODO's
 # TODO: add api_routers to clean up this main file -> create location.py and move everything connected there

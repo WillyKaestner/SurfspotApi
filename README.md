@@ -8,7 +8,8 @@ The steps needed are:
 1) [Install dependencies](#install-dependencies)
 2) [Create .env file](#create-env-file)
 3) [Database setup](#database-setup)
-4) [Run local server]()
+4) [Run local server](#run-local-server)
+5) [Deploy on AWS](#deploy-on-aws)
 
 
 ### Install dependencies
@@ -65,6 +66,30 @@ uvicorn src.main:app --reload
 
 More details about how to run a server manually can be found in the [FastAPI documentation](https://fastapi.tiangolo.com/deployment/manually/?h=uvi).
 
+
+### Deploy on AWS
+The following information provides a guideline on how to deploy this API application on AWS through AWS services.
+
+#### AWS Lightsail
+
+The container service from AWS Lightsail makes it easy to deploy our application as a docker container.
+For a new deployment the following steps need to be preformed:
+
+1) Build, tag and push the docker image to ECR with: 
+   ```
+   make push_amd64_image
+   ```
+   
+2) Create an AWS Lightsail container service if there's not already an existing one
+   - Nano capacity with 512 MB RAM & 0.25 vCPUs is sufficient
+3) After creating the container service, open the service and under images connect the privat ECR repository where the image is stored.
+    Permissions to read the container images need be added to the IAM user creating the container service and deployment, details are found [here](https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-container-service-ecr-private-repo-access#ecr-private-repos-permissions)
+4) Under the deployment tab create a new deployment with the following values ([detailed information](https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-container-services-deployments)) :
+   - _Image_: link the privat ECR repo from before. E.g: `720918233027.dkr.ecr.eu-central-1.amazonaws.com/surfspotapi_amd64:latest`
+   - _Configuration_: If CMD is not set in the DockerFile, set the launch command to `uvicorn src.main\:app --host 0.0.0.0 --port 80` - using the port that is exposed in the Dockerfile
+   - _Open Ports_: Define port 80 and HTTP - using the port that is exposed in the Dockerfile
+   - _Public Endpoint_: Choose a container in your deployment that you want to make available to the internet as a public endpoint
+5) Click _Save and Deploy_ - AWS Lightsail does the rest
 
 ## Debug API application using Insomnia
 To debug the application during local development [Insomnia](https://insomnia.rest/) can be used. 
