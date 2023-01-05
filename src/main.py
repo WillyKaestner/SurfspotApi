@@ -11,6 +11,7 @@ from src.config import SETTINGS, StorageType
 # TODO: add Github actions to deploy container aws lightsail
 # TODO: add a postgres database or S3 databucket storing the sqlite database in aws
 # TODO: add CORS
+# TODO: add location_online endpoints that triggers a crawler to fetch data from somewhere (msw, google, openstreetmaps etc)
 
 # DONE TODO's
 # TODO: add api_routers to clean up this main file -> create location.py and move everything connected there
