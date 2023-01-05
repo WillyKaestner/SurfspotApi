@@ -31,4 +31,3 @@ class StorageType(Enum):
 
 
 SETTINGS = Settings()
-
