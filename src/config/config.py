@@ -3,8 +3,8 @@ from pydantic import BaseSettings, validator
 from pathlib import Path
 
 class Settings(BaseSettings):
-    database_type: str
-    database_name: str
+    database_type: str = ""
+    database_name: str = ""
     database_password: str = ""
 
     class Config:
