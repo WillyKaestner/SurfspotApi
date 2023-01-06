@@ -8,6 +8,11 @@ on:
 
 jobs:
   Build-Push-AWS-ECR:
+    environment:
+      name: Production
+    env:
+      DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
+      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
@@ -31,7 +36,7 @@ jobs:
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ci_surfspotapi
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: latest
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
