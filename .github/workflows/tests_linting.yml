@@ -27,8 +27,10 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   Tests:
+    environment:
+      name: Testing
     env:
-      DATABASE_TYPE: FAKE_DB
+      DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
