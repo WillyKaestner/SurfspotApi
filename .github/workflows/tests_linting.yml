@@ -28,7 +28,7 @@ jobs:
 
   Tests:
     env:
-      DATABASE_TYPE: "FAKE_DB"
+      DATABASE_TYPE: FAKE_DB
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
