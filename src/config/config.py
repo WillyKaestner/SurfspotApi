@@ -1,11 +1,12 @@
+from typing import Optional
 from enum import Enum, auto
 from pydantic import BaseSettings, validator
 from pathlib import Path
 
 class Settings(BaseSettings):
-    database_type: str = ""
-    database_name: str = ""
-    database_password: str = ""
+    database_type: str
+    database_name: Optional[str] = None
+    database_password: Optional[str] = None
 
     class Config:
         env_file = f"{Path(__file__).resolve().parent}/.env"
@@ -15,8 +16,7 @@ class Settings(BaseSettings):
         storage_mapping = {"SQLITE": StorageType.SQLITE,
                            "POSTGRES": StorageType.POSTGRES,
                            "DUMMY_DATA": StorageType.DUMMY_DATA,
-                           "FAKE_DB": StorageType.FAKE_DB,
-                           "": "For CI tests"}
+                           "FAKE_DB": StorageType.FAKE_DB}
         if value.upper() not in storage_mapping.keys():
             raise ValueError(f'Incorrect database type provided: {value}. '
                              f'Use one of the following: {list(storage_mapping.keys())}')
