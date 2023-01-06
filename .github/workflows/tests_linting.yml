@@ -11,8 +11,8 @@ jobs:
     uses: ./.github/workflows/linting.yml
   Call-testing-workflow:
     uses: ./.github/workflows/testing.yml
-      secrets:
-        DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
+    secrets:
+      DATABASE_TYPE: ${{ secrets.DATABASE_TYPE }}
 
 #  Linting:
 #    runs-on: ubuntu-latest
