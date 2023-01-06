@@ -8,6 +8,8 @@ on:
 
 jobs:
   Build-Push-AWS-ECR:
+    runs-on: ubuntu-latest
+    steps:
     - name: Checkout repo
       uses: actions/checkout@v3
 
