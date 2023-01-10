@@ -56,7 +56,7 @@ jobs:
           \"containerName\": \"container-ci-surfspotapi\",
           \"containerPort\": 80,
           \"healthCheck\": {
-            \"path\": \"/healthcheck/liveness\",
+            \"path\": \"/\",
             \"intervalSeconds\": 300
           }
         }"      
