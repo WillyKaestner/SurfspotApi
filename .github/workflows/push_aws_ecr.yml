@@ -46,7 +46,7 @@ jobs:
         --service-name surfspotapi \
         --containers "{
         \"container-ci-surfspotapi\": {
-          \"image\": \"$REGISTRY/$REPOSITORY:$IMAGE_TAG\",
+          \"image\": \"720918233027.dkr.ecr.eu-central-1.amazonaws.com/ci_surfspotapi:latest\",
           \"ports\": {
             \"80\": \"HTTP\"
           }
