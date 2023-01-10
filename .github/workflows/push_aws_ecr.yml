@@ -45,7 +45,7 @@ jobs:
         aws lightsail create-container-service-deployment \
         --service-name surfspotapi \
         --containers "{
-        \"container_ci_surfspotapi\": {
+        \"container-ci-surfspotapi\": {
           \"image\": \"$REGISTRY/$REPOSITORY:$IMAGE_TAG\",
           \"ports\": {
             \"80\": \"HTTP\"
@@ -53,7 +53,7 @@ jobs:
         }
         }" \
               --public-endpoint "{
-          \"containerName\": \"container_ci_surfspotapi\",
+          \"containerName\": \"container-ci-surfspotapi\",
           \"containerPort\": 80,
           \"healthCheck\": {
             \"path\": \"/healthcheck/liveness\",
