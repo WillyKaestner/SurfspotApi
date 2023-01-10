@@ -1,5 +1,11 @@
 FROM python:latest
 
+# Set ENV variables for CI/CD
+ARG ARG_DATABASE_TYPE
+ARG ARG_DATABASE_NAME
+ENV DATABASE_TYPE=$ARG_DATABASE_TYPE
+ENV DATABASE_NAME=$ARG_DATABASE_NAME
+
 # Set the working directory in the docker container
 WORKDIR /app
 
