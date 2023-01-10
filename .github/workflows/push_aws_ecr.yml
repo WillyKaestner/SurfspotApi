@@ -40,5 +40,57 @@ jobs:
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE --build-arg ARG_DATABASE_NAME=$DATABASE_NAME .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+    - name: deploy to aws lightsail container service
+      run: |
+        aws lightsail create-container-service-deployment \
+        --service-name surfspotapi \
+        --containers "{
+        \"container_ci_surfspotapi\": {
+          \"image\": \"$REGISTRY/$REPOSITORY:$IMAGE_TAG\",
+          \"ports\": {
+            \"80\": \"HTTP\"
+          }
+        }
+        }" \
+              --public-endpoint "{
+          \"containerName\": \"container_ci_surfspotapi\",
+          \"containerPort\": 80,
+          \"healthCheck\": {
+            \"path\": \"/healthcheck/liveness\",
+            \"intervalSeconds\": 300
+          }
+        }"      
+  
+#  Deploy to AWS Lightsail:
+#    environment:
+#      name: Production
+#    env:
+#      DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
+#      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
+#      - name: start aws lightsail container service
+#        run: |
+#          aws lightsail create-container-service-deployment \
+#          --service-name surfspotapi \
+#          --containers "{
+#          \"container_ci_surfspotapi\": {
+#            \"image\": \"$REGISTRY/$REPOSITORY:$IMAGE_TAG\",
+#            \"ports\": {
+#              \"80\": \"HTTP\"
+#            }
+#          }
+#          }" \
+#                --public-endpoint "{
+#            \"containerName\": \"container_ci_surfspotapi\",
+#            \"containerPort\": 80,
+#            \"healthCheck\": {
+#              \"path\": \"/healthcheck/liveness\",
+#              \"intervalSeconds\": 300
+#            }
+#          }"
         
 
