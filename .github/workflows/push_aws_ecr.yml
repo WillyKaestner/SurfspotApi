@@ -38,6 +38,8 @@ jobs:
         REPOSITORY: ci_surfspotapi
         IMAGE_TAG: latest
       run: |
+        echo $DATABASE_TYPE
+        echo $DATABASE_NAME
         docker build \
         -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \ 
         --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE \
