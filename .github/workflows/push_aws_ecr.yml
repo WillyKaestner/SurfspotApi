@@ -2,6 +2,9 @@ name: Build/push to AWS ECR and deploy to AWS Lightsail
 
 # Event triggered whenever a new release is published in GitHub
 on:
+  push:
+    branches:
+      - main
   release:
     types: [published]
 
@@ -10,8 +13,9 @@ jobs:
     environment:
       name: Production
     env:
-      DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
-      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+      DATABASE_TYPE: ${{ secrets.DATABASE_TYPE }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
@@ -42,7 +46,7 @@ jobs:
         --service-name surfspotapi \
         --containers "{
         \"container-ci-surfspotapi\": {
-          \"image\": \"720918233027.dkr.ecr.eu-central-1.amazonaws.com/ci_surfspotapi:latest\",
+          \"image\": \"$AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/ci_surfspotapi:latest\",
           \"ports\": {
             \"80\": \"HTTP\"
           }
