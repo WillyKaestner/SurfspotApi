@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     database_type: str
     database_name: Optional[str] = None
     database_password: Optional[str] = None
+    aws_access_key_id: Optional[str] = None
+    aws_secret_access_key: Optional[str] = None
 
     class Config:
         env_file = f"{Path(__file__).resolve().parent}/.env"

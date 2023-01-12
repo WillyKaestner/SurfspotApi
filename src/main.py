@@ -8,25 +8,9 @@ from src.config import SETTINGS, StorageType
 
 # TODO: implement authorization
 # TODO: add testing
-# TODO: add Github actions to deploy container aws lightsail
-# TODO: add a postgres database or S3 databucket storing the sqlite database in aws
 # TODO: add CORS
 # TODO: add location_online endpoints that triggers a crawler to fetch data from somewhere (msw, google, openstreetmaps etc)
 
-# DONE TODO's
-# TODO: add api_routers to clean up this main file -> create location.py and move everything connected there
-# TODO: create git and github repo
-# TODO: create a config file that reads in specific deployment values (which kind of database to use etc.)
-# TODO: create option here to work with SQLite or Postgres Database (perhaps even just a list etc.)
-#  This can probably be done in a way that the location api endpoints (get, post etc) don't rely on a concrete
-#  implementation but rather an interface to preform their crud actions
-# TODO: try out with postgres database
-# TODO: use enums for handling the database types
-# TODO: add validation to the pydantic model when reading in the database type
-# TODO: Find a better solution for creating a database engine & SessionLocal instance so it is skipped when working
-#  with Dummy_Data
-# TODO: create a simple readme file
-# TODO: add alembic
 
 # Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
 if SETTINGS.database_type == StorageType.SQLITE:
