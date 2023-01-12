@@ -9,7 +9,8 @@ from src.config import SETTINGS, StorageType
 # TODO: implement authorization
 # TODO: add testing
 # TODO: add CORS
-# TODO: add location_online endpoints that triggers a crawler to fetch data from somewhere (msw, google, openstreetmaps etc)
+# TODO: add location_online endpoints that triggers a crawler to fetch data from somewhere
+#  (msw, google, openstreetmaps etc)
 
 
 # Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
