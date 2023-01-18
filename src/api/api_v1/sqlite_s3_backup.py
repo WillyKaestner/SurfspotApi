@@ -10,15 +10,20 @@ router = APIRouter()
 if SETTINGS.aws_access_key_id is not None:
 
     s3 = boto3.client("s3",
+                      # endpoint_url="https://lightsail-surfspotapi-sqlite-db.s3.eu-central-1.amazonaws.com",
                       region_name='eu-central-1',
                       aws_access_key_id=SETTINGS.aws_access_key_id,
                       aws_secret_access_key=SETTINGS.aws_secret_access_key)
+
+    # for my_bucket_object in s3.objects.all():
+    #     print(my_bucket_object.key)
 
     @router.on_event("startup")
     async def get_sqlite_db_from_s3():
         """Download sqlite database backup from AWS S3 during startup of the server"""
         with open('./src/data/surfhopper.db', 'wb') as f:
             s3.download_fileobj('surfspotapi-sqlite-db', 'surfhopper.db', f)
+            # s3.download_fileobj('lightsail-surfspotapi-sqlite-db', 'surfhopper.db', f)
             print("downloaded s3 object")
 
     @router.on_event("shutdown")
@@ -26,5 +31,6 @@ if SETTINGS.aws_access_key_id is not None:
         """Upload sqlite database to AWS S3 when server is shut down"""
         with open("./src/data/surfhopper.db", "rb") as f:
             s3.upload_fileobj(f, "surfspotapi-sqlite-db", "surfhopper.db")
+            # s3.upload_fileobj(f, "lightsail-surfspotapi-sqlite-db", "surfhopper.db")
             print("uploaded s3 object")
 

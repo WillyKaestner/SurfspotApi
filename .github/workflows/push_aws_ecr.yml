@@ -43,7 +43,7 @@ jobs:
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
         --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE \
         --build-arg ARG_DATABASE_NAME=$DATABASE_NAME \
-        --build-arg ARG_AWS_ACESSKEY_ID=$AWS_ACCESS_KEY_ID \
+        --build-arg ARG_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
         --build-arg ARG_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     - name: deploy to aws lightsail container service
