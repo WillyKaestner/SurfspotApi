@@ -8,3 +8,4 @@ pyyaml
 psycopg2-binary
 pytest
 boto3
+fastapi_utils
