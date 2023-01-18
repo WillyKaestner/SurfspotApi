@@ -8,7 +8,6 @@ router = APIRouter()
 if SETTINGS.deployment == DeploymentType.PRODUCTION:
 
     s3 = boto3.client("s3",
-                      # endpoint_url="https://lightsail-surfspotapi-sqlite-db.s3.eu-central-1.amazonaws.com",
                       region_name='eu-central-1',
                       aws_access_key_id=SETTINGS.aws_access_key_id,
                       aws_secret_access_key=SETTINGS.aws_secret_access_key)
