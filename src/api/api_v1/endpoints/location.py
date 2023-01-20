@@ -1,20 +1,37 @@
-from fastapi import Response, status, HTTPException, Depends, APIRouter
+from fastapi import Response, status, HTTPException, Depends, APIRouter, BackgroundTasks
 import src.schemas as schemas
 from src.crud import crud_location, repository
+from src.config import SETTINGS, DeploymentType
+import boto3
 
 router = APIRouter(
     prefix="/location",
     tags=["Locations"]
 )
 
+def backup_sqlite_to_s3():
+    """Upload sqlite database to AWS S3 when server is shut down"""
+    with open("./src/data/surfhopper.db", "rb") as f:
+        s3 = boto3.client("s3",
+                          region_name='eu-central-1',
+                          aws_access_key_id=SETTINGS.aws_access_key_id,
+                          aws_secret_access_key=SETTINGS.aws_secret_access_key)
+        s3.upload_fileobj(f, "surfspotapi-sqlite-db", "surfhopper.db")
+        print("Uploaded surfhopper.db s3 object")
+
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.LocationResponse)
 def create_spot(location: schemas.LocationCreate,
-                storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
+                background_tasks: BackgroundTasks,
+                storage: crud_location.AbstractLocation = Depends(repository.get_crud_location),):
     location_in_storage = storage.get_by_name(location.name)
     if location_in_storage:
         raise HTTPException(status_code=400, detail="Location already registered")
-    return storage.add(location_data=location)
+    location_response = storage.add(location_data=location)
+    # Backup database in production
+    if SETTINGS.deployment == DeploymentType.PRODUCTION:
+        background_tasks.add_task(backup_sqlite_to_s3)
+    return location_response
 
 
 @router.get("/", response_model=list[schemas.LocationResponse])
