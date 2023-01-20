@@ -30,6 +30,7 @@ def create_spot(location: schemas.LocationCreate,
     location_response = storage.add(location_data=location)
     # Backup database in production
     if SETTINGS.deployment == DeploymentType.PRODUCTION:
+        print("post endpoint triggered and production set")
         background_tasks.add_task(backup_sqlite_to_s3)
     return location_response
 
