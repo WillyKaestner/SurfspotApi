@@ -11,7 +11,6 @@ router = APIRouter(
 
 def backup_sqlite_to_s3():
     """Upload sqlite database to AWS S3 when server is shut down"""
-    print("sqlite backup function triggered")
     with open("./src/data/surfhopper.db", "rb") as f:
         s3 = boto3.client("s3",
                           region_name='eu-central-1',
@@ -23,8 +22,8 @@ def backup_sqlite_to_s3():
 @router.post("/backup", status_code=status.HTTP_202_ACCEPTED)
 def backup_location_db():
     if SETTINGS.deployment == DeploymentType.PRODUCTION:
-        print("post endpoint triggered and production set")
         backup_sqlite_to_s3()
+        return Response(content="SQlite database backed up to S3 bucket", status_code=status.HTTP_202_ACCEPTED)
     else:
         raise HTTPException(status_code=400, detail="Not a production setup")
 
