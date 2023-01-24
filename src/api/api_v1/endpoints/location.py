@@ -31,6 +31,11 @@ def backup_location_db():
 def create_spot(location: schemas.LocationCreate,
                 background_tasks: BackgroundTasks,
                 storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
+    # Separate this into three functions that are called:
+    # 1) raise_exception_if_location_already_exists()
+    # 2) location_response = storage.add(location_data=location)
+    # 3) backup_storage(SETTINGS.deployment)
+    # 4) return location_response
     location_in_storage = storage.get_by_name(location.name)
     if location_in_storage:
         raise HTTPException(status_code=400, detail="Location already registered")
