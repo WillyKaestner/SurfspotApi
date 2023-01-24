@@ -37,7 +37,6 @@ def create_spot(location: schemas.LocationCreate,
     location_response = storage.add(location_data=location)
     # Backup database in production
     if SETTINGS.deployment == DeploymentType.PRODUCTION:
-        print("post endpoint triggered and production set")
         background_tasks.add_task(backup_sqlite_to_s3)
     return location_response
 
@@ -59,6 +58,7 @@ def read_surfspot(location_id: int, storage: crud_location.AbstractLocation = De
 @router.put("/{location_id}", status_code=status.HTTP_201_CREATED, response_model=schemas.LocationResponse)
 def update_spot(location_id: int,
                 updated_location: schemas.LocationBase,
+                background_tasks: BackgroundTasks,
                 storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location = storage.get_by_id(location_id)
     if location is None:
@@ -66,6 +66,9 @@ def update_spot(location_id: int,
                             detail=f"Location with id {location_id} does not exist")
     else:
         updated_location_in_storage = storage.update(location_id, updated_location)
+        # Backup database in production
+        if SETTINGS.deployment == DeploymentType.PRODUCTION:
+            background_tasks.add_task(backup_sqlite_to_s3)
         return updated_location_in_storage
 
 
