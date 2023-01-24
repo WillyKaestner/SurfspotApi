@@ -11,6 +11,7 @@ router = APIRouter(
 
 def backup_sqlite_to_s3():
     """Upload sqlite database to AWS S3 when server is shut down"""
+    print("sqlite backup function triggered")
     with open("./src/data/surfhopper.db", "rb") as f:
         s3 = boto3.client("s3",
                           region_name='eu-central-1',
@@ -19,11 +20,18 @@ def backup_sqlite_to_s3():
         s3.upload_fileobj(f, "surfspotapi-sqlite-db", "surfhopper.db")
         print("Uploaded surfhopper.db s3 object")
 
+@router.post("/backup", status_code=status.HTTP_202_ACCEPTED)
+def backup_location_db():
+    if SETTINGS.deployment == DeploymentType.PRODUCTION:
+        print("post endpoint triggered and production set")
+        backup_sqlite_to_s3()
+    else:
+        raise HTTPException(status_code=400, detail="Not a production setup")
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.LocationResponse)
 def create_spot(location: schemas.LocationCreate,
                 background_tasks: BackgroundTasks,
-                storage: crud_location.AbstractLocation = Depends(repository.get_crud_location),):
+                storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location_in_storage = storage.get_by_name(location.name)
     if location_in_storage:
         raise HTTPException(status_code=400, detail="Location already registered")
