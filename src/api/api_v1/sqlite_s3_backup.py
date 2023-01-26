@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 import boto3
-from src.config import SETTINGS, DeploymentType
+from src.config import SETTINGS, DeploymentType, StorageType
 
 router = APIRouter()
 
 # For production on aws lightsail the database is backed up to an S3 data bucket when the application is shut down
-if SETTINGS.deployment == DeploymentType.PRODUCTION:
+if SETTINGS.deployment == DeploymentType.PRODUCTION and SETTINGS.database_type == StorageType.SQLITE:
 
     s3 = boto3.client("s3",
                       region_name='eu-central-1',
