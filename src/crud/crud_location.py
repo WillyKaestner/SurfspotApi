@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 import pendulum as pdl
+import boto3
 
 import src.schemas as schemas
 import src.models as models
+from src.config import SETTINGS, DeploymentType
 
 
 class AbstractLocation(ABC):
@@ -46,6 +48,8 @@ class SqlAlchemyLocation(AbstractLocation):
         self.db.add(db_surfspot)
         self.db.commit()
         self.db.refresh(db_surfspot)
+        if self.is_sqlite is True and SETTINGS.deployment == DeploymentType.PRODUCTION:
+            _backup_sqlite_to_s3()
         return db_surfspot
 
     def get_by_id(self, location_id: int) -> schemas.LocationResponse | None:
@@ -62,6 +66,8 @@ class SqlAlchemyLocation(AbstractLocation):
         spot_query = self._get_location_by_id_query(location_id)
         spot_query.update(updated_location.dict(), synchronize_session=False)
         self.db.commit()
+        if self.is_sqlite is True and SETTINGS.deployment == DeploymentType.PRODUCTION:
+            _backup_sqlite_to_s3()
         return spot_query.first()
 
     def delete(self, location_id: int) -> bool:
@@ -202,3 +208,14 @@ class FakeDB(AbstractLocation):
                 FakeDB.fake_db.pop(index)
                 return True
         return False
+
+
+def _backup_sqlite_to_s3():
+    """Upload sqlite database to AWS S3 when server is shut down"""
+    with open("./src/data/surfhopper.db", "rb") as f:
+        s3 = boto3.client("s3",
+                          region_name='eu-central-1',
+                          aws_access_key_id=SETTINGS.aws_access_key_id,
+                          aws_secret_access_key=SETTINGS.aws_secret_access_key)
+        s3.upload_fileobj(f, "surfspotapi-sqlite-db", "surfhopper.db")
+        print("Uploaded surfhopper.db s3 object")
