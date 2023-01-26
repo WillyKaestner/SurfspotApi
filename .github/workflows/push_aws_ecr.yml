@@ -16,6 +16,7 @@ jobs:
       DATABASE_TYPE: ${{ secrets.DATABASE_TYPE }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       DEPLOYMENT: ${{ secrets.DEPLOYMENT }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
       DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -47,6 +48,7 @@ jobs:
         --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE \
         --build-arg ARG_DATABASE_NAME=$DATABASE_NAME \
         --build-arg ARG_DEPLOYMENT=$DEPLOYMENT \
+        --build-arg ARG_DATABASE_PASSWORD=$DATABASE_PASSWORD \
         --build-arg ARG_DATABASE_USERNAME=$DATABASE_USERNAME \
         --build-arg ARG_DATABASE_HOST=$DATABASE_HOST \
         --build-arg ARG_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
