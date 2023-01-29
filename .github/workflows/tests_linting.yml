@@ -12,7 +12,7 @@ jobs:
   Call-testing-workflow:
     uses: ./.github/workflows/testing.yml
   Call-testing-workflow-again:
-    needs: Call-linting-workflow
+    needs: [Call-linting-workflow, Call-testing-workflow]
     uses: ./.github/workflows/testing.yml
 
 #    secrets:
