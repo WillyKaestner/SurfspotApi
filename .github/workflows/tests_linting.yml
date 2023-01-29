@@ -9,7 +9,7 @@ on:
 jobs:
   Call-Linting:
     uses: ./.github/workflows/reuse_linting.yml
-  Call-Tests:
+  Call-Testing:
     uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
   Call-testing-workflow-again:
