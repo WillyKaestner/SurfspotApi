@@ -7,6 +7,8 @@ from src.api.api_v1.api import api_router
 from src.config import SETTINGS, StorageType
 
 # TODO: implement authorization
+# TODO: change Githubs actions pipeline to reuse steps (testing)
+# TODO: create a Github actions deployment that only works on testing branches -> for trying out deployment options
 # TODO: add testing
 # TODO: add CORS
 # TODO: add location_online endpoints that triggers a crawler to fetch data from somewhere
