@@ -3,11 +3,6 @@ name: Build/push to AWS ECR and deploy to AWS Lightsail
 # Event triggered whenever a new release is published in GitHub
 on:
   workflow_call:
-#  push:
-#    branches:
-#      - main
-#  release:
-#    types: [published]
 
 jobs:
   Build-Push-AWS-ECR-DEPLOY-AWS-Lightsail:

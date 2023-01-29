@@ -9,12 +9,12 @@ on:
     types: [published]
 
 jobs:
-  Call-linting-workflow:
-    uses: ./.github/workflows/linting.yml
-  Call-testing-workflow:
-    uses: ./.github/workflows/testing.yml
+  Linting:
+    uses: ./.github/workflows/reuse_linting.yml
+  Testing:
+    uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
-  Call-production-deployment-workflow:
+  Deploy_AWS_Lightsail:
     needs: [Call-linting-workflow, Call-testing-workflow]
-    uses: ./.github/workflows/push_aws_ecr.yml
+    uses: ./.github/workflows/reuse_push_aws_ecr.yml
     secrets: inherit
