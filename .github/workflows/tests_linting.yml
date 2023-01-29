@@ -14,5 +14,5 @@ jobs:
 #    secrets: inherit
   Call-testing-workflow-again:
     needs: [Call-linting-workflow, Call-testing-workflow]
-    uses: ./.github/workflows/testing.yml
+    uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
