@@ -7,8 +7,8 @@ name: Linting and Testing
 on: [push, pull_request]
 
 jobs:
-#  Call-linting-workflow:
-#    uses: ./.github/workflows/linting.yml
+  Call-linting-workflow:
+    uses: ./.github/workflows/linting.yml
   Call-testing-workflow:
     uses: ./.github/workflows/testing.yml
 #    secrets:
