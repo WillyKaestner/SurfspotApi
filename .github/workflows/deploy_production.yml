@@ -1,0 +1,20 @@
+name: Build/push to AWS ECR and deploy to AWS Lightsail
+
+# Event triggered whenever a new release is published in GitHub
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+
+jobs:
+  Call-linting-workflow:
+    uses: ./.github/workflows/linting.yml
+  Call-testing-workflow:
+    uses: ./.github/workflows/testing.yml
+    secrets: inherit
+  Call-production-deployment-workflow:
+    needs: [Call-linting-workflow, Call-testing-workflow]
+    uses: ./.github/workflows/push_aws_ecr.yml
+    secrets: inherit
