@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  Tests:
+  Run-Tests:
     runs-on: ubuntu-latest
     environment: Testing
     env:

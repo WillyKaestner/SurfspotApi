@@ -7,12 +7,12 @@ on:
       - main
 
 jobs:
-  Linting:
+  Call-Linting:
     uses: ./.github/workflows/reuse_linting.yml
-  Testing:
+  Call-Tests:
     uses: ./.github/workflows/reuse_testing.yml
-#    secrets: inherit
+    secrets: inherit
   Call-testing-workflow-again:
-    needs: [Linting, Testing]
+    needs: [Call-Linting, Call-Testing]
     uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
