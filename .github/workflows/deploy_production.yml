@@ -15,6 +15,6 @@ jobs:
     uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
   Deploy_AWS_Lightsail:
-    needs: [Call-linting-workflow, Call-testing-workflow]
+    needs: [Linting, Testing]
     uses: ./.github/workflows/reuse_push_aws_ecr.yml
     secrets: inherit
