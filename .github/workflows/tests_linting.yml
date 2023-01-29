@@ -11,9 +11,11 @@ jobs:
     uses: ./.github/workflows/linting.yml
   Call-testing-workflow:
     uses: ./.github/workflows/testing.yml
+    secrets: inherit
   Call-testing-workflow-again:
     needs: [Call-linting-workflow, Call-testing-workflow]
     uses: ./.github/workflows/testing.yml
+    secrets: inherit
 
 #    secrets:
 #      DATABASE_TYPE: ${{ secrets.DATABASE_TYPE }}
