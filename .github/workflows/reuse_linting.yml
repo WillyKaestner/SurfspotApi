@@ -1,4 +1,4 @@
-name: Linitng
+name: Reuseable Linting Workflow
 
 on:
   workflow_call:

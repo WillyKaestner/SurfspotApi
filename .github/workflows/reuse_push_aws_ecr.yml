@@ -1,4 +1,4 @@
-name: Build/push to AWS ECR and deploy to AWS Lightsail
+name: Reuseable Build and Deploy to AWS Workflow
 
 # Event triggered whenever a new release is published in GitHub
 on:
