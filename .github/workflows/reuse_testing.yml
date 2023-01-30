@@ -4,12 +4,11 @@ on:
   workflow_call:
 
 jobs:
-  Tests:
+  Run-Tests:
     runs-on: ubuntu-latest
     environment: Testing
     env:
       DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
-      # DATABASE_TYPE: FAKE_DB
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
@@ -23,5 +22,3 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
-#        with:
-#          DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
