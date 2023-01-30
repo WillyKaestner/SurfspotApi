@@ -10,9 +10,6 @@ jobs:
   Call-Linting:
     uses: ./.github/workflows/reuse_linting.yml
   Call-Testing:
-    uses: ./.github/workflows/reuse_testing.yml
-    secrets: inherit
-  Call-testing-workflow-again:
-    needs: [Call-Linting, Call-Testing]
+    needs: Call-Linting
     uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
