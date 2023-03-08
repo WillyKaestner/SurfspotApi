@@ -1,6 +1,6 @@
-name: Deploy to AWS Lightsail
+name: Deploy to AWS Lambda
 
-# Event triggered whenever a new release is published in GitHub
+# Event triggered whenever a change on the branch prod_lambda happens
 on:
   push:
     branches:
@@ -12,7 +12,7 @@ jobs:
   Call-Testing:
     uses: ./.github/workflows/reuse_testing.yml
     secrets: inherit
-  Deploy_AWS_Lightsail:
+  Deploy_AWS_Lambda:
     needs: [Call-Linting, Call-Testing]
-    # uses: ./.github/workflows/reuse_push_aws_ecr.yml
+    uses: ./.github/workflows/reuse_deploy_aws_lambda.yml
     secrets: inherit
