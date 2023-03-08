@@ -31,7 +31,8 @@ COPY . /app
 
 # Expose port 80
 # https://www.cloudbees.com/blog/docker-expose-port-what-it-means-and-what-it-doesnt-mean
-# EXPOSE 80
+EXPOSE 80
 
 # Point to mangum handler for aws lambda entrypoint
-CMD ["src.main:handler"]
+# CMD ["src.main.handler"]
+CMD ["app.src.main.handler"]
