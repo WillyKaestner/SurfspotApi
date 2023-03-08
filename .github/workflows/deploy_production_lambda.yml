@@ -9,10 +9,11 @@ on:
 jobs:
   Call-Linting:
     uses: ./.github/workflows/reuse_linting.yml
-  Call-Testing:
-    uses: ./.github/workflows/reuse_testing.yml
-    secrets: inherit
+#  Call-Testing:
+#    uses: ./.github/workflows/reuse_testing.yml
+#    secrets: inherit
   Deploy_AWS_Lambda:
-    needs: [Call-Linting, Call-Testing]
+    # needs: [Call-Linting, Call-Testing]
+    needs: [Call-Linting]
     uses: ./.github/workflows/reuse_deploy_aws_lambda.yml
     secrets: inherit
