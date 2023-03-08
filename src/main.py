@@ -2,6 +2,7 @@ from fastapi import FastAPI, Response
 import functools
 import io
 import yaml
+from mangum import Mangum
 import src.database as db
 from src.api.api_v1.api import api_router
 from src.config import SETTINGS, StorageType
@@ -49,3 +50,9 @@ def read_openapi_yaml() -> Response:
 # openapi_doc = app.openapi()
 # with open(file_path, "w") as outfile:
 #     json.dump(openapi_doc, outfile)
+
+###############################################################################
+#   Handler for AWS Lambda                                                    #
+###############################################################################
+
+handler = Mangum(app)

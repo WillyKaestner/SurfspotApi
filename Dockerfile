@@ -1,4 +1,4 @@
-FROM python:latest
+FROM public.ecr.aws/lambda/python:3.10
 
 # Set ENV variables for CI/CD
 ARG ARG_DATABASE_TYPE
@@ -33,5 +33,5 @@ COPY . /app
 # https://www.cloudbees.com/blog/docker-expose-port-what-it-means-and-what-it-doesnt-mean
 EXPOSE 80
 
-# start the server
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
+# Point to mangum handler for aws lambda entrypoint
+CMD ["src.main.handler"]
