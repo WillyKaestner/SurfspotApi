@@ -34,4 +34,4 @@ COPY . /app
 EXPOSE 80
 
 # Point to mangum handler for aws lambda entrypoint
-CMD ["src.main.handler"]
+CMD ["src.main:handler"]
