@@ -38,7 +38,7 @@ ENV AWS_SECRET_ACCESS_KEY=$ARG_AWS_SECRET_ACCESS_KEY
 #CMD ["app.src.main.handler"]
 
 # From Tut
-COPY ./src ./app
+COPY ./src ./src
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r ./requirements.txt
-CMD ["app.main.handler"]
+CMD ["src.main.handler"]
