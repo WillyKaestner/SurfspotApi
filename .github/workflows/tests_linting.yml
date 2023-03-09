@@ -5,6 +5,7 @@ on:
   push:
     branches-ignore:
       - main
+      - prod_lambda
 
 jobs:
   Call-Linting:

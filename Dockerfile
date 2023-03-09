@@ -42,3 +42,5 @@ COPY ./src ./src
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r ./requirements.txt
 CMD ["src.main.handler"]
+
+# TODO: update CI/CD pipeline so that the lambda function redeploys with the latest image
