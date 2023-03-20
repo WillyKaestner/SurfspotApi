@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Response
+import logging.config
 import functools
 import io
 import yaml
+from fastapi import FastAPI, Response
 from mangum import Mangum
+
+from src.config.logging_config import LOGGING_CONFIG
 import src.database as db
 from src.api.api_v1.api import api_router
 from src.config import SETTINGS, StorageType
@@ -14,6 +17,11 @@ from src.config import SETTINGS, StorageType
 # TODO: add CORS
 # TODO: add location_online endpoints that triggers a crawler to fetch data from somewhere
 #  (msw, google, openstreetmaps etc)
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
+logger.info(f"Application started with the following settings. Deployment type:{SETTINGS.deployment}. "
+            f"Database type: {SETTINGS.database_type}. Database: {SETTINGS.database_name}")
 
 
 # Create SQLite database (for Postgres the database has to already exist) and tables if they don't exist yet
@@ -31,6 +39,7 @@ app.include_router(api_router)
 
 @app.get("/")
 async def root():
+    logger.info("Root endpoint successfully loaded")
     return "Hello World - Surfspot & Kitespot server is running"
 
 

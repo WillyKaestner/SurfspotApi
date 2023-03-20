@@ -1,6 +1,9 @@
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 import src.schemas as schemas
 from src.crud import crud_location, repository
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/location",
@@ -25,6 +28,7 @@ def create_spot(location: schemas.LocationCreate,
 @router.get("/", response_model=list[schemas.LocationResponse])
 def read_all_surfspots(storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     locations = storage.list()
+    logger.info("All locations requested")
     return locations
 
 
@@ -32,6 +36,7 @@ def read_all_surfspots(storage: crud_location.AbstractLocation = Depends(reposit
 def read_surfspot(location_id: int, storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location = storage.get_by_id(location_id)
     if location is None:
+        logger.warning(f"Non existing location with id {location_id} was requested")
         raise HTTPException(status_code=404, detail="Location not found")
     return location
 
@@ -42,6 +47,7 @@ def update_spot(location_id: int,
                 storage: crud_location.AbstractLocation = Depends(repository.get_crud_location)):
     location = storage.get_by_id(location_id)
     if location is None:
+        logger.warning(f"Non existing location with id {location_id} was tried to be updated")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Location with id {location_id} does not exist")
     else:
