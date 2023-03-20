@@ -37,6 +37,8 @@ jobs:
         REPOSITORY: lambda_surfspotapi
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
+        PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
         IMAGE_TAG: latest
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \

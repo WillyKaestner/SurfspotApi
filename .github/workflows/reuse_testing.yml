@@ -9,6 +9,8 @@ jobs:
     environment: Testing
     env:
       DATABASE_TYPE: ${{secrets.DATABASE_TYPE}}
+      PAPERTRAIL_HOST: ${{ vars.PAPERTRAIL_HOST }}
+      PAPERTRAIL_PORT: ${{ vars.PAPERTRAIL_PORT }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
