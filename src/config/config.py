@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     database_host: Optional[str] = None
     aws_access_key_id: Optional[str] = None
     aws_secret_access_key: Optional[str] = None
+    papertrail_host: Optional[str] = None
+    papertrail_port: Optional[str] = None
 
     class Config:
         env_file = f"{Path(__file__).resolve().parent}/.env"
