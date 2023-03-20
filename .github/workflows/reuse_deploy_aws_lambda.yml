@@ -47,7 +47,7 @@ jobs:
         --build-arg ARG_DATABASE_PASSWORD=$DATABASE_PASSWORD \
         --build-arg ARG_DATABASE_USERNAME=$DATABASE_USERNAME \
         --build-arg ARG_DATABASE_HOST=$DATABASE_HOST \
-        --build-arg ARG_PAPERTRAIL_HOST=$PAPERTRAIL_HOST .
+        --build-arg ARG_PAPERTRAIL_HOST=$PAPERTRAIL_HOST \
         --build-arg ARG_PAPERTRAIL_PORT=$PAPERTRAIL_PORT .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
