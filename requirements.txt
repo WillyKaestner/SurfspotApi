@@ -9,3 +9,4 @@ psycopg2-binary
 pytest
 boto3
 mangum
+structlog
