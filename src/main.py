@@ -40,7 +40,7 @@ app.include_router(api_router)
 @app.get("/")
 async def root():
     logger.info("Root endpoint successfully loaded")
-    return "Hello World - Surfspot & Kitespot server is running. Now with Database!"
+    return "Hello World - Surfspot & Kitespot server is running. Now with better env handling in CI/CD!"
 
 
 # additional yaml version of openapi.json

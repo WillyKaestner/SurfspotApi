@@ -35,27 +35,23 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: lambda_surfspotapi
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
-          PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
+#          PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
           IMAGE_TAG: latest
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
-          --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE \
-          --build-arg ARG_DATABASE_NAME=$DATABASE_NAME \
-          --build-arg ARG_PAPERTRAIL_HOST=$PAPERTRAIL_HOST \
-          --build-arg ARG_PAPERTRAIL_PORT=$PAPERTRAIL_PORT .
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-#      - name: Update Lambda function with latest docker image
-#        run: |
-#          aws lambda update-function-code \
-#          --region eu-central-1 \
-#          --function-name surfspotapi \
-#          --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
+      - name: Update Lambda function with latest docker image
+        run: |
+          aws lambda update-function-code \
+          --region eu-central-1 \
+          --function-name surfspotapi \
+          --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
 
-      - name: Update environment variables within the lambda function
+      - name: Provide environment variables to lambda function
         env:
           PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
           PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
