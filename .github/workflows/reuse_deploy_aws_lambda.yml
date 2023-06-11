@@ -51,12 +51,12 @@ jobs:
         --build-arg ARG_PAPERTRAIL_PORT=$PAPERTRAIL_PORT .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-    - name: Update Lambda function with latest docker image
-      run: |
-        aws lambda update-function-code \
-        --region eu-central-1 \
-        --function-name surfspotapi \
-        --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
+#    - name: Update Lambda function with latest docker image
+#      run: |
+#        aws lambda update-function-code \
+#        --region eu-central-1 \
+#        --function-name surfspotapi \
+#        --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
 
     - name: Update environment variables within the lambda function
       run: |
