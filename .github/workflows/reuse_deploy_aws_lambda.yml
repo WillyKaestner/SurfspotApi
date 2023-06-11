@@ -63,4 +63,4 @@ jobs:
         aws lambda update-function-configuration \
         --region eu-central-1 \
         --function-name surfspotapi \
-        --environment "Variables={DATABASE_HOST_OLD=$DATABASE_HOST}"
+        --environment "Variables={DATABASE_HOST=TEST}"
