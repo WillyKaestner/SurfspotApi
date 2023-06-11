@@ -17,48 +17,55 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1 # More information on this action can be found below in the 'AWS Credentials' section
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-central-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1 # More information on this action can be found below in the 'AWS Credentials' section
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push docker image to Amazon ECR
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: lambda_surfspotapi
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
-        PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
-        --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE \
-        --build-arg ARG_DATABASE_NAME=$DATABASE_NAME \
-        --build-arg ARG_PAPERTRAIL_HOST=$PAPERTRAIL_HOST \
-        --build-arg ARG_PAPERTRAIL_PORT=$PAPERTRAIL_PORT .
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: lambda_surfspotapi
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
+          PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG \
+          --build-arg ARG_DATABASE_TYPE=$DATABASE_TYPE \
+          --build-arg ARG_DATABASE_NAME=$DATABASE_NAME \
+          --build-arg ARG_PAPERTRAIL_HOST=$PAPERTRAIL_HOST \
+          --build-arg ARG_PAPERTRAIL_PORT=$PAPERTRAIL_PORT .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-    - name: Update Lambda function with latest docker image
-      run: |
-        aws lambda update-function-code \
-        --region eu-central-1 \
-        --function-name surfspotapi \
-        --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
+      - name: Update Lambda function with latest docker image
+        run: |
+          aws lambda update-function-code \
+          --region eu-central-1 \
+          --function-name surfspotapi \
+          --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
 
-    - name: Update environment variables within the lambda function
-      run: |
-        sleep 60
-        aws lambda update-function-configuration \
-        --region eu-central-1 \
-        --function-name surfspotapi \
-        --environment "Variables={DATABASE_HOST=$DATABASE_HOST, DATABASE_PASSWORD=$DATABASE_PASSWORD, DATABASE_USERNAME=$DATABASE_USERNAME}"
+      - name: Update environment variables within the lambda function
+        run: |
+          sleep 60
+          aws lambda update-function-configuration \
+          --region eu-central-1 \
+          --function-name surfspotapi \
+          --environment "Variables={\
+          DATABASE_TYPE=$DATABASE_TYPE,\
+          DATABASE_NAME=$DATABASE_NAME,\
+          DATABASE_HOST=$DATABASE_HOST,\
+          DATABASE_PASSWORD=$DATABASE_PASSWORD,\
+          DATABASE_USERNAME=$DATABASE_USERNAME,\
+          PAPERTRAIL_HOST=$PAPERTRAIL_HOST,\
+          PAPERTRAIL_PORT=$PAPERTRAIL_PORT}"
