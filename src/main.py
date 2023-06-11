@@ -10,6 +10,10 @@ import src.database as db
 from src.api.api_v1.api import api_router
 from src.config import SETTINGS, StorageType
 
+# TODO: change config to work with only postgres as database_type, now two postgres database types
+# TODO: remove sqlite s3 backup and aws_secrets from config.py
+# TODO: add a env variable for production location: lambda & lightsail to run the correct way and only have one main branch
+
 # TODO: implement authorization
 # TODO: change Githubs actions pipeline to reuse steps (testing)
 # TODO: create a Github actions deployment that only works on testing branches -> for trying out deployment options
