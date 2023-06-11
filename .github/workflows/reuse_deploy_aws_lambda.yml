@@ -57,6 +57,9 @@ jobs:
         --region eu-central-1 \
         --function-name surfspotapi \
         --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
+
+    - name: Update environment variables within the lambda function
+      run: |
         aws lambda update-function-configuration \
         --region eu-central-1 \
         --function-name surfspotapi \
