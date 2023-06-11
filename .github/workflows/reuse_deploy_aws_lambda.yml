@@ -14,7 +14,9 @@ jobs:
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
       DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
+      PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
+#      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -35,10 +37,6 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: lambda_surfspotapi
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
-#          PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
           IMAGE_TAG: latest
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
@@ -52,11 +50,8 @@ jobs:
           --image-uri 720918233027.dkr.ecr.eu-central-1.amazonaws.com/lambda_surfspotapi:latest
 
       - name: Provide environment variables to lambda function
-        env:
-          PAPERTRAIL_HOST: ${{ secrets.PAPERTRAIL_HOST }}
-          PAPERTRAIL_PORT: ${{ secrets.PAPERTRAIL_PORT }}
         run: |
-          sleep 60
+          sleep 30
           aws lambda update-function-configuration \
           --region eu-central-1 \
           --function-name surfspotapi \
