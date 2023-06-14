@@ -5,12 +5,12 @@ from sqlalchemy import pool
 
 from alembic import context
 from src import models
-from src.database.session import create_db_engine
+from src.database.session import get_database_url
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-db_url = create_db_engine(alembic_use=True)
+db_url = get_database_url()
 db_url_escaped = db_url.replace('%', '%%')
 config.set_main_option("sqlalchemy.url", db_url_escaped)
 

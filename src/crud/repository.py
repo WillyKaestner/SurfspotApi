@@ -16,7 +16,7 @@ def get_crud_location() -> crud_location.AbstractLocation:
     if SETTINGS.database_type == StorageType.SQLITE:
         repository = crud_location.SqlAlchemyLocation(db=db.get_db(), is_sqlite=True)
         return repository
-    if SETTINGS.database_type == StorageType.POSTGRES or SETTINGS.database_type == StorageType.LIGHTSAIL_POSTGRES:
+    if SETTINGS.database_type == StorageType.POSTGRES:
         repository = crud_location.SqlAlchemyLocation(db=db.get_db(), is_sqlite=False)
         return repository
     if SETTINGS.database_type == StorageType.DUMMY_DATA:

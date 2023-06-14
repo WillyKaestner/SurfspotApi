@@ -2,30 +2,26 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from src.config import SETTINGS, StorageType
 
-def create_db_engine(alembic_use: bool = False):
+def create_db_engine():
     """Create and return database engine based on the storage defined in config"""
     if SETTINGS.database_type == StorageType.SQLITE:
-        sqlalchemy_database_url = f"sqlite:///./src/data/{SETTINGS.database_name}"
-        engine = create_engine(sqlalchemy_database_url, connect_args={"check_same_thread": False})
+        engine = create_engine(get_database_url(), connect_args={"check_same_thread": False})
         return engine
 
     if SETTINGS.database_type == StorageType.POSTGRES:
-        sqlalchemy_database_url = f"postgresql://willykastner:{SETTINGS.database_password}@" \
-                                  f"localhost:5432/{SETTINGS.database_name}"
-        if alembic_use is True:
-            return sqlalchemy_database_url
-
-        engine = create_engine(sqlalchemy_database_url)
+        engine = create_engine(get_database_url())
         return engine
 
-    if SETTINGS.database_type == StorageType.LIGHTSAIL_POSTGRES:
+def get_database_url() -> str:
+    """Return the database base url generated according to config"""
+    if SETTINGS.database_type == StorageType.SQLITE:
+        sqlalchemy_database_url = f"sqlite:///./src/data/{SETTINGS.database_name}"
+    elif SETTINGS.database_type == StorageType.POSTGRES:
         sqlalchemy_database_url = f"postgresql://{SETTINGS.database_username}:{SETTINGS.database_password}@" \
-                                  f"{SETTINGS.database_host}:5432/{SETTINGS.database_name}"
-        if alembic_use is True:
-            return sqlalchemy_database_url
-
-        engine = create_engine(sqlalchemy_database_url)
-        return engine
+                                  f"{SETTINGS.database_host}:{SETTINGS.database_port}/{SETTINGS.database_name}"
+    else:
+        raise ValueError(f"Couldn't create database url because of invalid storage type: {SETTINGS.database_type.name}")
+    return sqlalchemy_database_url
 
 
 def get_db() -> Session:

@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     database_password: Optional[str] = None
     database_username: Optional[str] = None
     database_host: Optional[str] = None
+    database_port: Optional[int] = None
     aws_access_key_id: Optional[str] = None
     aws_secret_access_key: Optional[str] = None
     papertrail_host: Optional[str] = None
@@ -22,7 +23,6 @@ class Settings(BaseSettings):
     def determine_correct_database_type(cls, value: str):
         storage_mapping = {"SQLITE": StorageType.SQLITE,
                            "POSTGRES": StorageType.POSTGRES,
-                           "LIGHTSAIL_POSTGRES": StorageType.LIGHTSAIL_POSTGRES,
                            "DUMMY_DATA": StorageType.DUMMY_DATA,
                            "FAKE_DB": StorageType.FAKE_DB}
         if value.upper() not in storage_mapping.keys():
@@ -46,7 +46,6 @@ class Settings(BaseSettings):
 class StorageType(Enum):
     SQLITE = auto()
     POSTGRES = auto()
-    LIGHTSAIL_POSTGRES = auto()
     DUMMY_DATA = auto()
     FAKE_DB = auto()
 
