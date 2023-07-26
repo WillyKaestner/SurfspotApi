@@ -1,0 +1,14 @@
+_id: env_0fa08d43605245ae9ec9cc10bf486bb2
+type: Environment
+parentId: env_6264480dd22957e5817da83b3f0e23f5c2b3f5d8
+modified: 1690377065237
+created: 1690376739558
+name: AWS Lambda
+data:
+  base_url: https://khctijk4hb.execute-api.eu-central-1.amazonaws.com/prod
+dataPropertyOrder:
+  "&":
+    - base_url
+color: "#da8e0b"
+isPrivate: false
+metaSortKey: 1690376739558
