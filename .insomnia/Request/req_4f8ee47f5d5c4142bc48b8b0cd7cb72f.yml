@@ -1,9 +1,9 @@
 _id: req_4f8ee47f5d5c4142bc48b8b0cd7cb72f
 type: Request
 parentId: fld_d9ebb7b1cf1249aabb5726cbcd2efead
-modified: 1671047408634
+modified: 1690377081388
 created: 1670780346845
-url: "{{ _.base_url }}/location"
+url: "{{ _.base_url }}/location/"
 name: Get all surfspots
 description: ""
 method: GET
