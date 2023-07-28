@@ -1,7 +1,7 @@
 fastapi[all]
-SQLAlchemy
+SQLAlchemy==1.4.39
 alembic
-pydantic
+pydantic==1.10.12
 pendulum
 uvicorn[standard]
 pyyaml
